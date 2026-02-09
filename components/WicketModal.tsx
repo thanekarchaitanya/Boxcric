@@ -25,17 +25,17 @@ const WicketModal: React.FC<WicketModalProps> = ({ isOpen, onClose, onSelect }) 
       onClick={onClose}
     >
       <div 
-        className="w-full max-w-md bg-[#121212] border-t border-white/10 rounded-t-2xl p-6 pb-12 shadow-2xl animate-in slide-in-from-bottom duration-300"
+        className="w-full max-w-md bg-[var(--secondary-bg)] border-t border-[var(--border-color)] rounded-t-2xl p-6 pb-12 shadow-2xl animate-in slide-in-from-bottom duration-300"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex justify-between items-center mb-6 px-2">
           <div>
-            <h2 className="text-2xl font-black text-white italic tracking-tighter uppercase">Record <span className="text-[#FF3B30]">Wicket</span></h2>
-            <div className="h-1 w-12 bg-[#FF3B30] mt-1 rounded-full"></div>
+            <h2 className="text-2xl font-black text-white italic tracking-tighter uppercase">Record <span className="text-[var(--warning-red)]">Wicket</span></h2>
+            <div className="h-1 w-12 bg-[var(--warning-red)] mt-1 rounded-full"></div>
           </div>
           <button 
             onClick={onClose} 
-            className="w-12 h-12 flex items-center justify-center bg-[#1A1A1A] rounded-xl text-slate-500 active-scale transition-colors"
+            className="w-12 h-12 flex items-center justify-center bg-[var(--card-bg)] rounded-xl text-slate-500 active-scale transition-colors"
             aria-label="Close"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" /></svg>
@@ -49,11 +49,11 @@ const WicketModal: React.FC<WicketModalProps> = ({ isOpen, onClose, onSelect }) 
               onClick={() => onSelect(scenario.ball)}
               className={`
                 w-full px-6 py-5 rounded-xl text-left border transition-all active-scale flex items-center justify-between group
-                ${index === 0 ? 'bg-[#FF3B30] border-[#FF3B30]/20 text-white shadow-lg shadow-[#FF3B30]/10' : 'bg-[#1A1A1A] border-white/5 text-slate-100'}
+                ${index === 0 ? 'bg-[var(--warning-red)] border-[var(--warning-red)]/20 text-white shadow-lg' : 'bg-[var(--card-bg)] border-[var(--border-color)] text-slate-100'}
               `}
             >
               <span className="font-black text-sm uppercase tracking-widest italic">{scenario.label}</span>
-              <div className={`w-2 h-2 rounded-full ${index === 0 ? 'bg-white' : 'bg-[#FF3B30]'} opacity-40 transition-opacity`}></div>
+              <div className={`w-2 h-2 rounded-full ${index === 0 ? 'bg-white' : 'bg-[var(--warning-red)]'} opacity-40 transition-opacity`}></div>
             </button>
           ))}
         </div>

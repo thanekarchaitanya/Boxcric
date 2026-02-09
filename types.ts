@@ -1,4 +1,3 @@
-
 export type WicketType = 
   | 'Bowled' 
   | 'Caught' 
@@ -15,9 +14,9 @@ export interface BallHistory {
   wicketType?: WicketType;
 }
 
-export type UserRole = 'admin' | 'spectator';
+export type UserRole = 'admin' | 'spectator' | 'player';
 export type MatchPermission = 'editable' | 'view-only';
-export type AppView = 'welcome' | 'setup' | 'join' | 'toss' | 'scoring';
+export type AppView = 'welcome' | 'setup' | 'join' | 'join-options' | 'player-setup' | 'toss' | 'scoring';
 
 export interface TossResult {
   winner: string;
@@ -59,6 +58,10 @@ export interface MatchState {
   firstInningsData: InningsData | null;
   isGameOver: boolean;
   seriesScore: SeriesScore;
+  playerName?: string;
+  playerTeam?: string;
+  lastUpdated?: number; // Timestamp for sync
+  syncStatus?: 'synced' | 'syncing' | 'offline';
 }
 
 export interface HistorySnapshot {

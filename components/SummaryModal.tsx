@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { MatchState, BallHistory } from '../types';
+import Coin from './Coin';
 
 interface SummaryModalProps {
   isOpen: boolean;
@@ -60,15 +61,17 @@ const OverDetail: React.FC<{
             style = "bg-[#FF3B30] text-white border-transparent shadow-sm";
             label = "W";
           } else if (ball.type !== 'legal') {
-            style = "bg-amber-500/10 text-amber-500 border-amber-500/20";
+            style = "bg-amber-400 text-black border-transparent shadow-sm";
             label = ball.type === 'wide' ? "WD" : "NB";
           } else if (ball.runs === 4) {
-            style = "bg-[#00E676]/15 text-[#00E676] border-[#00E676]/20";
+            style = "bg-[#00C853] text-black border-transparent shadow-sm";
           } else if (ball.runs === 6) {
-            style = "bg-[#00E676] text-black border-transparent shadow-sm";
+            style = "bg-[#00E676] text-black border-transparent shadow-lg ring-1 ring-[#00E676]/50";
           } else if (ball.runs === 0) {
             label = "•";
-            style = "bg-white/5 text-white/10 border-white/5";
+            style = "bg-white/5 text-white/20 border-white/5";
+          } else {
+            style = "bg-white/10 text-white border-white/5";
           }
           
           return (
@@ -82,15 +85,6 @@ const OverDetail: React.FC<{
   );
 };
 
-const TrophyIcon = () => (
-  <div className="relative w-20 h-20 mx-auto mb-4 animate-bounce">
-    <div className="absolute inset-0 bg-[#00E676]/20 rounded-full blur-xl scale-125"></div>
-    <svg viewBox="0 0 24 24" className="w-full h-full text-[#00E676] drop-shadow-[0_0_10px_rgba(0,230,118,0.5)]" fill="currentColor">
-      <path d="M19,5H17V3H7V5H5C3.9,5 3,5.9 3,7V9C3,11.39 4.81,13.35 7.11,13.82C7.96,15.85 9.82,17.3 12,17.3C14.18,17.3 16.04,15.85 16.89,13.82C19.19,13.35 21,11.39 21,9V7C21,5.9 20.1,5 19,5M5,9V7H7V11.53C5.83,11.14 5,10.17 5,9M19,9C19,10.17 18.17,11.14 17,11.53V7H19V9M18,19V21H6V19H18M15,18H9V17H15V18Z" />
-    </svg>
-  </div>
-);
-
 const SummaryModal: React.FC<SummaryModalProps> = ({ isOpen, onClose, match, onReset, onUpdateBall, onNextMatch }) => {
   const [setupPhase, setSetupPhase] = useState<'view' | 'next-match-options'>('view');
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
@@ -100,7 +94,7 @@ const SummaryModal: React.FC<SummaryModalProps> = ({ isOpen, onClose, match, onR
     if (isOpen) {
       setSetupPhase('view');
       setShowCancelConfirm(false);
-      setShowInnings1(false); // Default collapse innings 1 when opening
+      setShowInnings1(false);
     }
   }, [isOpen]);
 
@@ -167,23 +161,17 @@ const SummaryModal: React.FC<SummaryModalProps> = ({ isOpen, onClose, match, onR
               <StatTile label="Innings No." value={match.innings} />
             </div>
 
-            {/* WINNER HIGHLIGHT SECTION - Atmospheric, non-button appearance */}
             {match.isGameOver && (
               <div className="relative mb-4 pt-6 pb-2 flex flex-col items-center justify-center overflow-hidden">
-                {/* Background Glow Pulse */}
                 <div className="absolute inset-0 bg-[#00E676]/5 rounded-full blur-[40px] scale-90 animate-pulse opacity-40"></div>
                 
                 <div className="relative z-10 flex flex-col items-center text-center">
                   <span className="text-[#00E676] text-[10px] font-black uppercase tracking-[0.8em] mb-3 italic opacity-60">Victory Decided</span>
-                  
-                  {/* Dynamic Winner Title with Shimmer and Drop Shadow */}
                   <h3 className="text-3xl font-black italic tracking-tighter leading-none uppercase text-white drop-shadow-[0_0_20px_rgba(0,230,118,0.4)] relative">
                     <span className="bg-gradient-to-r from-white via-[#00E676] to-white bg-clip-text text-transparent animate-[shimmer_3s_infinite_linear] bg-[length:200%_auto]">
                       {winningTeam} Wins!
                     </span>
                   </h3>
-                  
-                  {/* Subtle underline accent */}
                   <div className="w-16 h-[1.5px] bg-gradient-to-r from-transparent via-[#00E676]/60 to-transparent mt-4"></div>
                 </div>
               </div>
@@ -211,7 +199,6 @@ const SummaryModal: React.FC<SummaryModalProps> = ({ isOpen, onClose, match, onR
                   </div>
                 ) : (
                   <>
-                    {/* INNINGS 2 (CURRENT) */}
                     {innings2Overs.length > 0 && match.innings === 2 && (
                       <div className="mb-4">
                          <div className="flex items-center justify-between mb-3">
@@ -226,7 +213,6 @@ const SummaryModal: React.FC<SummaryModalProps> = ({ isOpen, onClose, match, onR
                       </div>
                     )}
 
-                    {/* INNINGS 1 - Collapsable if in Innings 2 */}
                     {innings1Overs.length > 0 && (
                       <div className="mt-1">
                         {match.innings === 2 ? (
@@ -277,7 +263,15 @@ const SummaryModal: React.FC<SummaryModalProps> = ({ isOpen, onClose, match, onR
           </div>
         ) : (
           <div className="flex flex-col items-center animate-in zoom-in-95 fade-in duration-500 max-w-sm mx-auto w-full px-2">
-            <TrophyIcon />
+            <div className="mb-6 relative">
+              <div className="absolute inset-0 bg-[#00E676]/20 rounded-full blur-2xl animate-pulse"></div>
+              <Coin 
+                side={isTargetReached ? (match.battingTeam === 1 ? 'HEADS' : 'TAILS') : (match.battingTeam === 1 ? 'TAILS' : 'HEADS')} 
+                isResult 
+                size="w-32 h-32" 
+                className="animate-bounce"
+              />
+            </div>
             <div className="text-center mb-10">
               <span className="text-[10px] font-black text-[#00E676] uppercase tracking-[0.8em] mb-2 block italic">Winner</span>
               <h4 className="text-4xl font-black text-white italic uppercase tracking-tighter leading-none mb-4 drop-shadow-[0_4px_12px_rgba(0,0,0,1)]">

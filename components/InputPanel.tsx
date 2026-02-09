@@ -30,10 +30,10 @@ const ScoreButton: React.FC<{
         flex items-center justify-center 
         rounded-2xl
         border
-        shadow-inner
+        shadow-sm
         ${disabled 
-          ? 'bg-[#1A1A1A] text-slate-800 border-white/5 cursor-not-allowed opacity-40' 
-          : 'bg-[#2A2A2A] text-slate-300 border-white/5 active-scale active:bg-[#00E676] active:text-black active:border-transparent'}
+          ? 'bg-[var(--card-bg)] text-[var(--text-secondary)] border-[var(--border-color)] cursor-not-allowed opacity-30' 
+          : 'bg-[var(--card-bg)] text-[var(--text-primary)] border-[var(--border-color)] active-scale active:bg-[var(--accent-green)] active:text-black active:border-transparent'}
       `}
     >
       {label}
@@ -45,9 +45,9 @@ const InputPanel: React.FC<InputPanelProps> = ({ onRun, onExtra, onWicket, onUnd
   return (
     <div className="flex flex-col gap-6">
       {isViewOnly && (
-        <div className="bg-[#00E676]/5 border border-[#00E676]/20 rounded-xl p-3 flex items-center justify-center gap-2 mb-2">
-           <svg className="w-4 h-4 text-[#00E676]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-           <span className="text-[10px] font-black text-[#00E676] uppercase tracking-widest">View Only Mode</span>
+        <div className="bg-[var(--accent-green)]/5 border border-[var(--accent-green)]/20 rounded-xl p-3 flex items-center justify-center gap-2 mb-2">
+           <svg className="w-4 h-4 text-[var(--accent-green)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+           <span className="text-[10px] font-black text-[var(--accent-green)] uppercase tracking-widest">View Only Mode</span>
         </div>
       )}
 
@@ -67,19 +67,19 @@ const InputPanel: React.FC<InputPanelProps> = ({ onRun, onExtra, onWicket, onUnd
       </div>
 
       {/* Utility Controls */}
-      <div className="flex items-center justify-between pt-4 border-t border-white/5">
+      <div className="flex items-center justify-between pt-4 border-t border-[var(--border-color)]">
         <button 
           onClick={onUndo}
           disabled={!canUndo || isViewOnly}
-          className={`group flex items-center gap-2 px-4 py-2.5 rounded-xl font-black text-[10px] uppercase tracking-widest border transition-all active-scale ${canUndo && !isViewOnly ? 'text-slate-400 border-slate-700' : 'text-slate-800 border-slate-800 cursor-not-allowed'}`}
+          className={`group flex items-center gap-2 px-5 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest border transition-all active-scale ${canUndo && !isViewOnly ? 'text-[var(--text-secondary)] border-[var(--border-color)] shadow-sm' : 'text-slate-400 border-slate-200 cursor-not-allowed opacity-20'}`}
         >
-          <svg className={`h-3.5 w-3.5 ${canUndo && !isViewOnly ? 'text-[#00E676]' : 'text-slate-800'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+          <svg className={`h-3.5 w-3.5 ${canUndo && !isViewOnly ? 'text-[var(--accent-green)]' : 'text-slate-300'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
           Undo
         </button>
 
         <button 
           onClick={onSummary}
-          className="flex items-center gap-2 px-6 py-3.5 bg-[#00E676] text-black rounded-xl font-black text-[10px] uppercase tracking-widest shadow-xl shadow-[#00E676]/20 transition-all active-scale"
+          className="flex items-center gap-2 px-7 py-3.5 bg-[var(--accent-green)] text-black rounded-xl font-black text-[10px] uppercase tracking-widest shadow-xl shadow-[var(--accent-green)]/20 active-scale"
         >
           <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
           Summary

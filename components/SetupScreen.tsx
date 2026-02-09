@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { MatchPermission } from '../types';
 
@@ -18,7 +17,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ onBack, onCreate }) => {
   };
 
   return (
-    <div className="flex flex-col h-[100dvh] w-full bg-[#000] p-5 animate-in slide-in-from-right duration-500 overflow-hidden">
+    <div className="flex flex-col h-[100dvh] max-w-md mx-auto bg-[#000] p-5 animate-in slide-in-from-right duration-500 overflow-hidden">
       <header className="flex items-center mb-4 gap-4 shrink-0">
         <button onClick={onBack} className="w-10 h-10 flex items-center justify-center bg-white/5 rounded-xl active-scale border border-white/10">
           <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7"/></svg>
@@ -82,7 +81,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ onBack, onCreate }) => {
             <div className="grid grid-cols-2 gap-2">
               <button 
                 onClick={() => setPermission('editable')}
-                className={`flex items-center justify-center gap-2 py-3 rounded-xl font-black text-[9px] uppercase tracking-widest border transition-all active-scale ${permission === 'editable' ? 'bg-[#00E676]/10 text-[#00E676] border-[#00E676]/40' : 'bg-white/5 text-white/40 border-white/5'}`}
+                className={`flex items-center justify-center gap-2 py-3 rounded-xl font-black text-[9px] uppercase tracking-widest border transition-all active-scale ${permission === 'editable' ? 'bg-[#00E676]/5 text-[#00E676] border-[#00E676]' : 'bg-white/5 text-white/40 border-white/5'}`}
               >
                 <svg className={`w-3.5 h-3.5 ${permission === 'editable' ? 'text-[#00E676]' : 'text-white/20'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -91,7 +90,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ onBack, onCreate }) => {
               </button>
               <button 
                 onClick={() => setPermission('view-only')}
-                className={`flex items-center justify-center gap-2 py-3 rounded-xl font-black text-[9px] uppercase tracking-widest border transition-all active-scale ${permission === 'view-only' ? 'bg-[#00E676]/10 text-[#00E676] border-[#00E676]/40' : 'bg-white/5 text-white/40 border-white/5'}`}
+                className={`flex items-center justify-center gap-2 py-3 rounded-xl font-black text-[9px] uppercase tracking-widest border transition-all active-scale ${permission === 'view-only' ? 'bg-[#00E676]/5 text-[#00E676] border-[#00E676]' : 'bg-white/5 text-white/40 border-white/5'}`}
               >
                 <svg className={`w-3.5 h-3.5 ${permission === 'view-only' ? 'text-[#00E676]' : 'text-white/20'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
