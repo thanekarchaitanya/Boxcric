@@ -18,7 +18,7 @@ const SetupScreen: React.FC<SetupScreenProps> = ({ onBack, onCreate }) => {
   };
 
   return (
-    <div className="flex flex-col h-[100dvh] max-w-md mx-auto bg-[#000] p-5 animate-in slide-in-from-right duration-500 overflow-hidden">
+    <div className="flex flex-col h-[100dvh] w-full bg-[#000] p-5 animate-in slide-in-from-right duration-500 overflow-hidden">
       <header className="flex items-center mb-4 gap-4 shrink-0">
         <button onClick={onBack} className="w-10 h-10 flex items-center justify-center bg-white/5 rounded-xl active-scale border border-white/10">
           <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7"/></svg>

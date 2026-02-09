@@ -147,7 +147,7 @@ const TossScreen: React.FC<TossScreenProps> = ({ team1, team2, onComplete, onBac
   };
 
   return (
-    <div className="flex flex-col h-[100dvh] w-full max-w-md mx-auto bg-[#000] p-6 animate-in fade-in duration-500 overflow-hidden relative">
+    <div className="flex flex-col h-[100dvh] w-full bg-[#000] p-6 animate-in fade-in duration-500 overflow-hidden relative">
       <div className="absolute inset-0 z-0 pointer-events-none">
         <div className={`absolute top-0 left-0 w-full h-full transition-opacity duration-1000 ${phase === 'result' ? 'opacity-100' : 'opacity-0'}`}>
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[160%] h-[160%] bg-[radial-gradient(circle_at_center,rgba(0,230,118,0.06)_0%,transparent_65%)] animate-[pulse_4s_infinite]"></div>

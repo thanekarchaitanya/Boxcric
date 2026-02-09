@@ -8,7 +8,7 @@ interface WelcomeScreenProps {
 
 const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onCreate, onJoin }) => {
   return (
-    <div className="flex flex-col h-[100dvh] w-full max-w-md mx-auto bg-[#000] items-center justify-center p-8 relative overflow-hidden">
+    <div className="flex flex-col h-[100dvh] w-full bg-[#000] items-center justify-center p-8 relative overflow-hidden">
       {/* Premium Animated Background */}
       <div className="absolute inset-0 z-0">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150%] h-[150%] bg-[radial-gradient(circle_at_center,rgba(0,230,118,0.1)_0%,transparent_60%)] animate-[pulse_5s_infinite] pointer-events-none"></div>
@@ -32,12 +32,12 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onCreate, onJoin }) => {
               textAnchor="middle" 
               fontFamily="'JetBrains Mono', monospace" 
               fontWeight="900" 
-              fontSize="42" 
+              fontSize="36" 
               fill="url(#logoGrad)" 
               fontStyle="italic" 
               letterSpacing="-2"
             >
-              PLAYSCORE
+              BoxCricLive
             </text>
            </svg>
         </div>

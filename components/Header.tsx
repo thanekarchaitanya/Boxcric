@@ -16,7 +16,7 @@ const Header: React.FC<HeaderProps> = ({ timerSeconds }) => {
     <header className="flex justify-between items-center px-5 py-2.5 bg-[#121212] border-b border-white/5 shrink-0">
       <div className="flex flex-col">
         <h1 className="text-xl font-black tracking-tighter text-white italic uppercase leading-none">
-          Play<span className="text-[#00E676]">Score</span>
+          BoxCric<span className="text-[#00E676]">Live</span>
         </h1>
         <div className="h-[2px] w-6 bg-[#00E676] mt-1 rounded-full green-glow"></div>
       </div>

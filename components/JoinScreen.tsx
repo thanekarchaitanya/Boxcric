@@ -24,7 +24,7 @@ const JoinScreen: React.FC<JoinScreenProps> = ({ onBack, onJoin }) => {
   };
 
   return (
-    <div className="flex flex-col h-[100dvh] max-w-md mx-auto bg-[#000] p-8 animate-in slide-in-from-left duration-500 relative overflow-hidden">
+    <div className="flex flex-col h-[100dvh] w-full bg-[#000] p-8 animate-in slide-in-from-left duration-500 relative overflow-hidden">
       <div className="absolute top-0 right-0 w-64 h-64 bg-[#00E676]/5 rounded-full blur-[100px] pointer-events-none"></div>
 
       <header className="flex items-center mb-16 gap-6 z-10">

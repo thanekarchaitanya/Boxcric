@@ -15,7 +15,7 @@ import TossScreen from './components/TossScreen';
 import MatchIDPopup from './components/MatchIDPopup';
 import InningsBreakPopup from './components/InningsBreakPopup';
 
-const STORAGE_KEY = 'playscore_match_state';
+const STORAGE_KEY = 'boxcriclive_match_state';
 
 const generateMatchId = () => {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -357,7 +357,7 @@ const App: React.FC = () => {
   const firstInningsTeam = match.battingTeam === 1 ? match.team2 : match.team1;
 
   return (
-    <div className="flex flex-col h-[100dvh] w-full max-w-md mx-auto bg-[#0B0B0B] shadow-2xl overflow-hidden relative border-x border-white/5">
+    <div className="flex flex-col h-[100dvh] w-full bg-[#0B0B0B] overflow-hidden relative">
       <Header timerSeconds={match.timerSeconds} />
       
       <main className="flex-1 px-4 py-1 flex flex-col min-h-0 mb-4 w-full">
