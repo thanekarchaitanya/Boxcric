@@ -1,65 +1,78 @@
 
 import React from 'react';
+import { InningsData } from '../types';
 
 interface InningsBreakPopupProps {
-  battingTeam: string;
-  bowlingTeam: string;
-  runs: number;
-  wickets: number;
+  isOpen: boolean;
+  onClose: () => void;
+  onViewSummary?: () => void;
+  target: number;
+  data: InningsData;
+  teamName: string;
   totalOvers: number;
-  onContinue: () => void;
-  onShowSummary: () => void;
 }
 
-const InningsBreakPopup: React.FC<InningsBreakPopupProps> = ({ 
-  battingTeam, bowlingTeam, runs, wickets, totalOvers, onContinue, onShowSummary 
-}) => {
-  const target = runs + 1;
-  const rrr = (target / totalOvers).toFixed(2);
+const InningsBreakPopup: React.FC<InningsBreakPopupProps> = ({ isOpen, onClose, onViewSummary, target, data, teamName, totalOvers }) => {
+  if (!isOpen) return null;
+
+  const fours = data.history.filter(b => b.runs === 4).length;
+  const sixes = data.history.filter(b => b.runs === 6).length;
+  const totalBalls = totalOvers * 6;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/90 backdrop-blur-xl animate-in fade-in duration-300">
-      <div className="bg-white rounded-[40px] w-full max-w-sm p-8 text-center shadow-[0_0_50px_rgba(16,185,129,0.4)] border-b-[12px] border-emerald-500">
-        <div className="bg-emerald-100 text-emerald-700 inline-block px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest mb-4">
-          Innings 1 Complete
-        </div>
+    <div className="fixed inset-0 z-[110] flex items-center justify-center p-6 bg-black/95 backdrop-blur-xl animate-in fade-in duration-300">
+      <div className="w-full max-w-sm bg-[#121212] border border-white/10 rounded-[2rem] p-8 text-center shadow-2xl animate-in zoom-in-95 duration-500 overflow-hidden relative">
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#00E676] to-transparent opacity-30"></div>
         
-        <h2 className="text-2xl font-black text-gray-900 mb-2 uppercase tracking-tighter">
-          {battingTeam} Finished
-        </h2>
-        
-        <div className="text-5xl font-black text-gray-900 mb-6 tracking-tighter">
-          {runs}<span className="text-gray-300">/</span><span className="text-red-600">{wickets}</span>
-        </div>
-
-        <div className="bg-black text-emerald-500 p-6 rounded-[32px] mb-8 shadow-2xl">
-          <span className="text-xs font-bold uppercase tracking-[0.2em] block opacity-70 mb-2">Target for {bowlingTeam}</span>
-          <span className="text-7xl font-black leading-none block">{target}</span>
-          <div className="flex justify-center gap-4 mt-4 pt-4 border-t border-white/10">
-            <div className="text-center">
-              <span className="block text-[10px] opacity-60 uppercase font-black tracking-widest">Required RR</span>
-              <span className="text-xl font-black text-white">{rrr}</span>
-            </div>
-            <div className="w-px bg-white/10 h-8 mt-2"></div>
-            <div className="text-center">
-              <span className="block text-[10px] opacity-60 uppercase font-black tracking-widest">Overs</span>
-              <span className="text-xl font-black text-white">{totalOvers}</span>
-            </div>
+        <div className="mb-6">
+          <span className="text-[8px] font-black text-[#00E676] uppercase tracking-[0.4em] block mb-2 opacity-50">First Innings Complete</span>
+          <h2 className="text-sm font-black text-white/40 uppercase tracking-widest mb-1 italic">{teamName}</h2>
+          <h3 className="text-base font-black text-white italic uppercase tracking-tighter leading-none mb-2">Target to win</h3>
+          <div className="text-5xl font-black text-[#00E676] tracking-tighter italic leading-none my-2 drop-shadow-[0_0_15px_rgba(0,230,118,0.25)]">
+            {target}
+          </div>
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-white/5 rounded-full border border-white/5 mt-1">
+            <span className="text-[9px] font-black text-white/40 uppercase tracking-widest italic">
+              {target} runs from {totalBalls} balls
+            </span>
           </div>
         </div>
 
-        <div className="flex flex-col gap-4">
+        {/* Simplified Performance Summary - Centered & Clean */}
+        <div className="bg-white/[0.02] border border-white/5 rounded-2xl p-5 mb-8 flex flex-col items-center">
+           <span className="text-[8px] font-black text-white/20 uppercase tracking-[0.2em] mb-3 block">1st Innings Performance</span>
+           
+           <div className="flex items-baseline justify-center gap-1 mb-4">
+             <span className="text-2xl font-black text-white italic tracking-tighter leading-none">{data.runs}</span>
+             <span className="text-xl font-black text-[#FF3B30] italic tracking-tighter opacity-70 leading-none">/{data.wickets}</span>
+             <span className="text-[8px] font-black text-white/30 uppercase tracking-widest italic ml-2">({data.overs} Ov)</span>
+           </div>
+
+           <div className="grid grid-cols-2 gap-2 w-full">
+             <div className="bg-white/5 rounded-lg py-2 px-3 flex flex-col items-center border border-white/5">
+                <span className="text-[7px] font-black text-white/20 uppercase mb-0.5">4s</span>
+                <span className="text-sm font-black text-white italic leading-none">{fours}</span>
+             </div>
+             <div className="bg-white/5 rounded-lg py-2 px-3 flex flex-col items-center border border-white/5">
+                <span className="text-[7px] font-black text-white/20 uppercase mb-0.5">6s</span>
+                <span className="text-sm font-black text-[#00E676] italic leading-none">{sixes}</span>
+             </div>
+           </div>
+        </div>
+
+        <div className="flex flex-col gap-3">
           <button 
-            onClick={onShowSummary}
-            className="w-full py-5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-2xl font-black text-sm uppercase tracking-widest transition-all active:scale-95 border border-gray-200"
+            onClick={onClose}
+            className="w-full py-4 bg-[#00E676] text-black rounded-xl font-black text-[10px] uppercase tracking-[0.3em] active-scale shadow-lg shadow-[#00E676]/10 transition-all"
           >
-            Quick Summary
+            Start Chasing
           </button>
+          
           <button 
-            onClick={onContinue}
-            className="w-full py-5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl font-black text-lg uppercase tracking-widest transition-all active:scale-95 shadow-xl shadow-emerald-500/40 animate-pulse ring-4 ring-emerald-500/20"
+            onClick={onViewSummary}
+            className="w-full py-3 bg-white/5 text-white/40 border border-white/5 rounded-xl font-black text-[9px] uppercase tracking-[0.2em] active-scale transition-all"
           >
-            Continue
+            Check 1st Innings Summary
           </button>
         </div>
       </div>
