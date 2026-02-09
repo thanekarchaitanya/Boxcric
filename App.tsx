@@ -12,20 +12,23 @@ import SettingsModal from './components/SettingsModal';
 import WelcomeScreen from './components/WelcomeScreen';
 import SetupScreen from './components/SetupScreen';
 import JoinScreen from './components/JoinScreen';
+import RoleSelectScreen from './components/RoleSelectScreen';
 import TossScreen from './components/TossScreen';
 import MatchIDPopup from './components/MatchIDPopup';
 import InningsBreakPopup from './components/InningsBreakPopup';
 import PlayerSetupScreen from './components/PlayerSetupScreen';
 
 // --- FIREBASE CONFIGURATION ---
-// IMPORTANT: Replace these placeholders with your actual Firebase project config
+// Uses environment variables from .env file
+// The private key from the service account should NOT be exposed in the frontend
+// Instead, use the web SDK config below
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: process.env.FIREBASE_API_KEY || "YOUR_API_KEY",
+  authDomain: process.env.FIREBASE_AUTH_DOMAIN || "boxcriclive.firebaseapp.com",
+  projectId: process.env.FIREBASE_PROJECT_ID || "boxcriclive",
+  storageBucket: process.env.FIREBASE_STORAGE_BUCKET || "boxcriclive.appspot.com",
+  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID || "YOUR_SENDER_ID",
+  appId: process.env.FIREBASE_APP_ID || "YOUR_APP_ID"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -90,32 +93,62 @@ const App: React.FC = () => {
   // Firestore Real-Time Listener (For Spectators and Players)
   useEffect(() => {
     if (match.matchId && match.role !== 'admin' && match.view === 'scoring') {
-      console.log(`Subscribing to Firestore: matches/${match.matchId}`);
+      console.log(`🔄 Setting up Firestore listener for: matches/${match.matchId}`);
       
       const matchDocRef = doc(db, "matches", match.matchId);
-      unsubscribeRef.current = onSnapshot(matchDocRef, (docSnap) => {
-        if (docSnap.exists()) {
-          const remoteState = docSnap.data() as MatchState;
-          
-          // Only update if the remote data is newer
-          if (!match.lastUpdated || (remoteState.lastUpdated || 0) > match.lastUpdated) {
-             setMatch(prev => ({ 
-               ...remoteState, 
-               role: prev.role, // Keep local role
-               playerName: prev.playerName, // Keep local player profile
-               playerTeam: prev.playerTeam,
-               syncStatus: 'synced'
-             }));
+      
+      // First, try to fetch the document immediately
+      getDoc(matchDocRef)
+        .then((docSnap) => {
+          if (docSnap.exists()) {
+            console.log(`✅ Found match document in Firestore:`, docSnap.data());
+            const remoteState = docSnap.data() as MatchState;
+            setMatch(prev => ({ 
+              ...remoteState, 
+              role: prev.role,
+              playerName: prev.playerName,
+              playerTeam: prev.playerTeam,
+              syncStatus: 'synced'
+            }));
+          } else {
+            console.log(`⚠️ Match document not found: matches/${match.matchId}`);
+            setMatch(prev => ({ ...prev, syncStatus: 'waiting' }));
           }
+        })
+        .catch((error) => {
+          console.error(`❌ Error fetching match:`, error);
+          setMatch(prev => ({ ...prev, syncStatus: 'offline' }));
+        });
+      
+      // Then set up the real-time listener for future updates
+      console.log(`📡 Subscribing to real-time updates`);
+      unsubscribeRef.current = onSnapshot(
+        matchDocRef,
+        (docSnap) => {
+          if (docSnap.exists()) {
+            console.log(`🔄 Match updated:`, docSnap.data());
+            const remoteState = docSnap.data() as MatchState;
+            
+            // Update with remote data
+            setMatch(prev => ({ 
+              ...remoteState, 
+              role: prev.role,
+              playerName: prev.playerName,
+              playerTeam: prev.playerTeam,
+              syncStatus: 'synced'
+            }));
+          }
+        },
+        (error) => {
+          console.error(`❌ Firestore listener error:`, error);
+          setMatch(prev => ({ ...prev, syncStatus: 'offline' }));
         }
-      }, (error) => {
-        console.error("Firestore Subscribe Error:", error);
-        setMatch(prev => ({ ...prev, syncStatus: 'offline' }));
-      });
+      );
     }
 
     return () => {
       if (unsubscribeRef.current) {
+        console.log(`🔌 Unsubscribing from Firestore`);
         unsubscribeRef.current();
         unsubscribeRef.current = null;
       }
@@ -220,51 +253,35 @@ const App: React.FC = () => {
   };
 
   const handleJoinView = async (id: string) => {
-    setMatch(prev => ({ ...prev, matchId: id, syncStatus: 'syncing' }));
-    try {
-      const matchDocRef = doc(db, "matches", id);
-      const docSnap = await getDoc(matchDocRef);
-      
-      if (docSnap.exists()) {
-        const remoteState = docSnap.data() as MatchState;
-        setMatch({
-          ...remoteState,
-          role: 'spectator',
-          permission: 'view-only',
-          view: 'scoring',
-          syncStatus: 'synced'
-        });
-      } else {
-        alert("Match ID not found in database. Check your ID and try again.");
-        navigateTo('join');
-      }
-    } catch (e) {
-      console.error("Firestore Join Error:", e);
-      alert("Error connecting to database. Please check your internet.");
+    // Validate match ID format (starts with PS and is 6 characters)
+    if (!id.startsWith('PS') || id.length !== 6) {
+      alert("Invalid match ID. Please check and try again.");
+      return;
     }
+
+    setMatch(prev => ({
+      ...prev,
+      matchId: id,
+      role: 'spectator',
+      permission: 'view-only',
+      view: 'role-select',
+      syncStatus: 'synced'
+    }));
   };
 
   const handleJoinPlayer = async (id: string) => {
-    try {
-      const matchDocRef = doc(db, "matches", id);
-      const docSnap = await getDoc(matchDocRef);
-      
-      if (docSnap.exists()) {
-        const remoteState = docSnap.data() as MatchState;
-        setMatch({
-          ...remoteState,
-          matchId: id,
-          view: 'player-setup',
-          role: 'player',
-          permission: 'view-only',
-          isTimerRunning: true
-        });
-      } else {
-        alert("Match ID not found.");
-      }
-    } catch (e) {
-      alert("Connection error.");
+    // Validate match ID format (starts with PS and is 6 characters)
+    if (!id.startsWith('PS') || id.length !== 6) {
+      alert("Invalid match ID. Please check and try again.");
+      return;
     }
+
+    setMatch(prev => ({
+      ...prev,
+      matchId: id,
+      view: 'role-select',
+      syncStatus: 'synced'
+    }));
   };
 
   const finalizePlayerSetup = (name: string, team: string) => {
@@ -493,8 +510,30 @@ const App: React.FC = () => {
     return <JoinScreen onBack={() => navigateTo('welcome')} onJoinView={handleJoinView} onJoinPlayer={handleJoinPlayer} />;
   }
 
+  if (match.view === 'role-select') {
+    return (
+      <RoleSelectScreen 
+        onSelectRole={(role) => {
+          if (role === 'viewer') {
+            // Viewer goes directly to scoring
+            setMatch(prev => ({
+              ...prev,
+              view: 'scoring',
+              role: 'spectator',
+              isTimerRunning: true
+            }));
+          } else {
+            // Player goes to player-setup screen
+            navigateTo('player-setup');
+          }
+        }}
+        onBack={() => navigateTo('join')}
+      />
+    );
+  }
+
   if (match.view === 'player-setup') {
-    return <PlayerSetupScreen onBack={() => navigateTo('join')} team1={match.team1} team2={match.team2} onComplete={finalizePlayerSetup} />;
+    return <PlayerSetupScreen onBack={() => navigateTo('role-select')} team1={match.team1} team2={match.team2} onComplete={finalizePlayerSetup} />;
   }
 
   const battingTeamName = match.battingTeam === 1 ? match.team1 : match.team2;
