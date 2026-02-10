@@ -68,7 +68,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onCreate, onJoin }) => {
               fontStyle="italic" 
               letterSpacing="-3"
             >
-              PLAYSCORE
+              BoxCricLive
             </text>
            </svg>
         </div>

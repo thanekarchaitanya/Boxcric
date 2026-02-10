@@ -34,7 +34,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-const STORAGE_KEY = 'playscore_match_state';
+const STORAGE_KEY = 'boxcriclive_match_state';
 
 const generateMatchId = () => {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
